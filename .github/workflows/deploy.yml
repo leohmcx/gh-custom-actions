@@ -98,4 +98,4 @@ jobs:
           dist-folder: ./dist
       - name: Output information
         run: | 
-          echo "Live URL: ${{ steps.deploy.outputs.website-url }}"
+          echo "Live URL: ${{ steps.deploy-docker.outputs.website-url }}"
