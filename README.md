@@ -3,6 +3,7 @@
 Links:
 
 - https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-composite-actions
+- https://docs.github.com/en/actions/creating-actions/publishing-actions-in-github-marketplace#publishing-an-action
 
 ![](readme-images/action-types.png?raw=true)
 
