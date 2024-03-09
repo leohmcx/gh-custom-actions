@@ -18,3 +18,5 @@ Links:
 - the node_modues in this folder .github/actions/deploy-s3-javascript must be commited for main.js run correctly in the server.
 
 ![](readme-images/aws.png?raw=true)
+
+![](readme-images/summary.png?raw=true)
