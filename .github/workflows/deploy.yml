@@ -4,6 +4,9 @@ on:
     branches:
       - master
   workflow_dispatch: 
+env:
+  BUCKET: ${{ vars.BUCKET }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -50,6 +53,9 @@ jobs:
           name: dist-files
           path: dist
   deploy:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read  # This is required for actions/checkout
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -62,11 +68,12 @@ jobs:
           path: ./dist
       - name: Output contents
         run: ls
+      - name: Get AWS Permissions
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+          role-to-assume: arn:aws:iam::680226692656:role/GithubDemo1
+          aws-region: ${{ env.AWS_REGION }}
       - name: Deploy site
-        env:
-          BUCKET: ${{ vars.BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
         uses: ./.github/actions/deploy-s3-javascript
         with: 
           bucket: ${{ env.BUCKET }}
@@ -75,6 +82,9 @@ jobs:
         run: | 
           echo "Live URL:" ${{ steps.deploy.outputs.website-url }}
   deploy-docker:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read  # This is required for actions/checkout
     needs: deploy
     runs-on: ubuntu-latest
     steps:
@@ -87,11 +97,12 @@ jobs:
           path: ./dist
       - name: Output contents
         run: ls
+      - name: Get AWS Permissions
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+          role-to-assume: arn:aws:iam::680226692656:role/GithubDemo1
+          aws-region: ${{ env.AWS_REGION }}
       - name: Deploy site
-        env:
-          BUCKET: ${{ vars.BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
         uses: ./.github/actions/deploy-s3-docker
         with: 
           bucket: ${{ env.BUCKET }}
